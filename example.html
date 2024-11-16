@@ -59,11 +59,11 @@
         const fiatCurrency = document.getElementById('fiatCurrency').value;
         const cryptoTicker = document.getElementById('cryptoTicker').value;
         const merchantWallet = document.getElementById('merchantWallet').value;
-        const callbackUrl = `https://www.highriskshop.com/payment-link/invoice.php?payment=${Date.now()}_${Math.floor(Math.random() * 9000000) + 1000000}`;
+        const callbackUrl = `https://paygate.to/payment-link/invoice.php?payment=${Date.now()}_${Math.floor(Math.random() * 9000000) + 1000000}`;
 
         try {
             // Convert fiat to crypto
-            const convertResponse = await fetch(`https://api.highriskshop.com/crypto/${cryptoTicker}/convert.php?from=${fiatCurrency}&value=${amount}`);
+            const convertResponse = await fetch(`https://api.paygate.to/crypto/${cryptoTicker}/convert.php?from=${fiatCurrency}&value=${amount}`);
             const convertData = await convertResponse.json();
 
             if (convertData.status !== 'success') {
@@ -73,7 +73,7 @@
             const cryptoAmount = convertData.value_coin;
 
             // Generate wallet address
-            const walletResponse = await fetch(`https://api.highriskshop.com/crypto/${cryptoTicker}/wallet.php?address=${merchantWallet}&callback=${encodeURIComponent(callbackUrl)}`);
+            const walletResponse = await fetch(`https://api.paygate.to/crypto/${cryptoTicker}/wallet.php?address=${merchantWallet}&callback=${encodeURIComponent(callbackUrl)}`);
             const walletData = await walletResponse.json();
 
             if (!walletData.address_in) {
@@ -83,7 +83,7 @@
             const paymentAddress = walletData.address_in;
 
             // Generate QR code
-            const qrResponse = await fetch(`https://api.highriskshop.com/crypto/${cryptoTicker}/qrcode.php?address=${paymentAddress}`);
+            const qrResponse = await fetch(`https://api.paygate.to/crypto/${cryptoTicker}/qrcode.php?address=${paymentAddress}`);
             const qrData = await qrResponse.json();
 
             if (qrData.status !== 'success') {
