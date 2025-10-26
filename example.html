@@ -87,6 +87,20 @@
             }
 
             const cryptoAmount = convertData.value_coin;
+			
+		    const infoResponse = await fetch(`https://api.paygate.to/crypto/${cryptoTicker}/info.php`);
+            const infoData = await infoResponse.json();
+			if (!infoData || !infoData.minimum) {
+            spinner.style.display = 'none';
+            throw new Error('Failed to retrieve coin info.');
+            }
+			
+			const minimumCrypto = parseFloat(infoData.minimum);
+			
+			if (cryptoAmount < minimumCrypto) {
+            spinner.style.display = 'none';
+            throw new Error(`Minimum amount for ${cryptoTicker.toUpperCase()} is ${minimumCrypto} ${cryptoTicker}.`);
+            }
 
             // Generate wallet address
             const walletResponse = await fetch(`https://api.paygate.to/crypto/${cryptoTicker}/wallet.php?address=${merchantWallet}&callback=${encodeURIComponent(callbackUrl)}`);
